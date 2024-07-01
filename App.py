@@ -151,8 +151,8 @@ class App():
             elif seleccion == '5':
                 print(' PRODUCTOS DISPONIBLES POR TIPO ')
                 tipo = input('''¿Qué tipo de producto quiere buscar? 
-    1. Bebida
-    2. Comida 
+            1. Bebida
+            2. Comida 
         ''').lower()
                 for producto in self.Productos:
                     if tipo == '1' and (producto.adicional == "alcoholic" or producto.adicional ==  "non-alcoholic"):
@@ -178,7 +178,7 @@ class App():
         print("Ingrese sus datos, partido y tipo de estrada que desee comprar")
         nombre = input("Nombre: ")
         cedula = input("Cedula: ")
-        self.venta_restaurante(cedula)
+        #self.venta_restaurante(cedula)
         edad = input("Edad: ")
 
         print("Acá tiene una lista de los partidos disponibles")
@@ -189,6 +189,8 @@ class App():
         for partido in self.Partidos:
             if int(selccion) == partido.number:
                 partido.show()   
+        
+        capacidad = partido.stadium_id.capacity
 
         tipo_entrada = input('''Tipo de estrada que desea comprar: 
         1. General
@@ -198,31 +200,60 @@ class App():
         if tipo_entrada == '1':
             precio_base = 35
             print("ENTRADA GENERAL")
+            capacidad = partido.stadium_id.capacity[0]
         
         elif tipo_entrada == '2':
             precio_base = 75
             print('''ENTRADA VIP
                   
-Prodra disfrutar de los productos del restaurante
-''')
+            Prodra disfrutar de los productos del restaurante
+            ''')
+            capacidad = partido.stadium_id.capacity[1]
         
         else:
             print("Tipo de entrada no válido. Debes elegir General o VIP.")
+
+        #Cantidad de filas segun su capacidad
+        fila = 
+        
+        #Mapa del estadio, es una matriz
+        asientos = []
+        for i in range(1, (capacidad//10)+1):
+            asientos_por_fila = []
+            for j in range(1, 11):
+                if len(str(i)) == 1:
+                    i = "0"+str(i)
+                asiento = f"{i}**{j}"
+                asientos_por_fila.append(asiento)
+            asientos.append(asientos_por_fila)
+        
+        print("Primero es la fila y luego la columna")
+
+        fila = input("Ingresa la fila ")
+        while not fila.isnumeric() or not int(fila) in range(1, row+1):
+            fila = input("Ingresa la fila ")
+
+        columna = input("Ingresa la columna ")
+        while not columna.isnumeric() or not int(columna) in range(1, 11):
+            columna = input("Ingresa la columna  ")
+        
+        asiento = f"{columna}**{columna}"
     
 
-#Verificar si la cedula es un numero vampiro 
+        #Verificar si la cedula es un numero vampiro 
         if sorted(cedula) == sorted(str(int(cedula) ** 2)):
             descuento = precio_base * 0.5
             print("¡Tienes un 50% de descuento por ser un número vampiro!")
 
-# Calcular impuesto (IVA)
+        # Calcular impuesto (IVA)
         iva = precio_base * 0.16
 
-# Calcular costo total
+        # Calcular costo total
         costo_total = precio_base + iva - descuento if "descuento" in locals() else precio_base + iva
 
-# Mostrar información al cliente
+        # Mostrar información al cliente
         print("INFORMACIÓN DE SU COMPRA")
+        print(f"Asiento: {asiento}")
         print(f"Costo de la entrada ({tipo_entrada}): ${precio_base:.2f}")
         print(f"Subtotal: ${precio_base:.2f}")
         if "descuento" in locals():
@@ -231,12 +262,12 @@ Prodra disfrutar de los productos del restaurante
         print(f"Total a pagar: ${costo_total:.2f}")
         print("¡Gracias por su compra!")
 
-# Gestion de asistencia a partidos 
+    # Gestion de asistencia a partidos 
     def validar_boleto(self, codigo):
     
-#Valida la autenticidad del boleto con el código único del mismo
+        #Valida la autenticidad del boleto con el código único del mismo
    
-    # Busca el partido correspondiente al código de boleto
+        # Busca el partido correspondiente al código de boleto
         for partido in self.Partidos:
             if partido.id == codigo:
             # Verifica si el boleto ya fue utilizado
@@ -252,8 +283,8 @@ Prodra disfrutar de los productos del restaurante
         return False
        
 
-#Gestion de restaurantes 
-    def venta_restaurante(self):
+    #Gestion de restaurantes 
+    def venta_restaurante(self, cedula):
         print("\nVENTA DE RESTAURANTES\n")
         print("Para ingresar en la venta de restaurantes, debemos chequear si usted es un cliente VIP: \n\n")
         while True:
